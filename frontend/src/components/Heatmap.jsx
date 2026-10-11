@@ -15,7 +15,8 @@ export default function Heatmap(){
     try {
       const res = await api.get('/heatmap')
       if (Array.isArray(res.data)) {
-        const mapped = res.data.map(d=>({ date: d.date, count: Math.min(4, d.count) }))
+        // The API returns { date, score }; score is the number of habits completed that day.
+        const mapped = res.data.map(d=>({ date: d.date, count: Math.min(4, Number(d.score) || 0) }))
         setData(mapped)
       } else {
         setData([])
@@ -42,7 +43,7 @@ export default function Heatmap(){
                 endDate={endDate}
                 values={data}
                 classForValue={(value) => {
-                    if (!value) return 'color-empty'
+                    if (!value || !value.count) return 'color-empty'
                     return `color-scale-${value.count}`
                 }}
             />

@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const { computeStreaks } = require('../utils/streak');
 const DailyLog = require('../models/DailyLog');
+const Habit = require('../models/Habit');
 const { startOfDay, subDays, format } = require('date-fns');
 
 // GET /api/stats
@@ -20,7 +21,10 @@ router.get('/', async (req, res) => {
     const streaks = await computeStreaks(req.user.id, today);
     
     const performance = todayLog[0] || { totalScore: 0, completedCount: 0, totalCount: 0 };
-    const completionRate = performance.totalCount ? Math.round((performance.completedCount / performance.totalCount) * 100) : 0;
+    // Share of the user's active habits completed today. A DailyLog row only exists for habits
+    // that were toggled, so dividing by the log count would report 100% almost every day.
+    const activeHabits = await Habit.countDocuments({ userId: req.user.id, active: { $ne: false } });
+    const completionRate = activeHabits ? Math.min(100, Math.round((performance.completedCount / activeHabits) * 100)) : 0;
 
     // Weekly points for the line graph
     const weeklyStart = startOfDay(subDays(today, 6));
