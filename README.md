@@ -1,5 +1,12 @@
 # 2026 In My Control
 
+**Live demo:** https://2026-in-my-control.vercel.app
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sangamyo/2026-in-my-control)
+
+The backend deploys to Render from [`render.yaml`](render.yaml), and the frontend is on Vercel. On Render's free plan the API sleeps when idle, so the first request after a while can take about 50 seconds.
+
+
 A full-stack habit and goal tracking dashboard. You define daily habits, check them off each day, and the app turns those check-ins into streaks, a yearly heatmap, trend charts and a rule-based "AI insight" report on your consistency.
 
 ## What it looks like
